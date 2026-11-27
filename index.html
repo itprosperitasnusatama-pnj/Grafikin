@@ -168,23 +168,6 @@ button,input,select{font:inherit}
 .mline-legend .ud{font-weight:700;margin-left:6px}
 .mline-legend .ud .u{color:#1d6640}
 .mline-legend .ud .d{color:#B42335;margin-left:4px}
-.mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.mini-card{position:relative;background:#fff;border:1px solid var(--brand-100);border-radius:9px;padding:8px 10px 6px;min-width:0}
-.mini-card.total{background:linear-gradient(180deg,#F1F7FB 0%,#fff 60%);border-color:#B3D3E6}
-.mini-head{display:flex;align-items:center;gap:6px;min-width:0}
-.mini-dot{width:9px;height:9px;border-radius:50%;flex:none}
-.mini-name{font-size:12.5px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1 1 auto;min-width:0}
-.mini-ud{font-size:11px;font-weight:800;white-space:nowrap;flex:none}
-.mini-ud .u{color:#1d6640}
-.mini-ud .d{color:#B42335;margin-left:5px}
-.mini-val{display:flex;align-items:baseline;gap:6px;margin-top:2px;white-space:nowrap}
-.mini-val b{font-size:15px;font-weight:800;color:var(--navy)}
-.mini-val .when{font-size:10.5px;color:#7d8b99}
-.mini-val .chg{font-size:11px;font-weight:800}
-.mini-val .chg.up{color:#1d6640}
-.mini-val .chg.down{color:#B42335}
-.mini-val .chg.flat{color:#7d8b99}
-.mini-axis{display:flex;justify-content:space-between;font-size:9.5px;color:#8a99a8;margin-top:-2px}
 .daily-cap{font-size:11px;color:var(--muted);margin-top:2px}
 .dtable{position:relative}
 .t-daily{width:100%;border-collapse:separate;border-spacing:2px;table-layout:fixed;font-variant-numeric:tabular-nums}
@@ -1748,15 +1731,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     svg.append('line').attr('x1', f.m.l).attr('x2', W - f.m.r).attr('y1', f.y(st.avg)).attr('y2', f.y(st.avg))
       .style('stroke', '#d4a72c').style('stroke-width', 1.5).style('stroke-dasharray', '5 4');
     svg.append('text').attr('x', W - f.m.r).attr('y', f.y(st.avg) - 4).attr('text-anchor', 'end').style('font-size', '10px').style('font-weight', 700).style('fill', '#9a7413').text('rata-rata');
-    var gid = 'mg' + (++miniUid);
-    var grad = svg.append('defs').append('linearGradient').attr('id', gid).attr('x1', 0).attr('x2', 0).attr('y1', 0).attr('y2', 1);
-    grad.append('stop').attr('offset', '0%').attr('stop-color', '#10638F').attr('stop-opacity', 0.26);
-    grad.append('stop').attr('offset', '100%').attr('stop-color', '#10638F').attr('stop-opacity', 0.02);
-    var y0 = f.y(Math.max(0, f.y.domain()[0]));
-    var area = d3.area().curve(d3.curveMonotoneX).x(function (pt) { return f.x(pt.iso); }).y0(y0).y1(function (pt) { return f.y(pt.v); });
-    var line = d3.line().curve(d3.curveMonotoneX).x(function (pt) { return f.x(pt.iso); }).y(function (pt) { return f.y(pt.v); });
-    svg.insert('path', ':first-child').attr('d', area(series)).style('fill', 'url(#' + gid + ')');
-    svg.append('path').attr('d', line(series)).style('fill', 'none').style('stroke', '#10638F').style('stroke-width', 2.6).style('stroke-linecap', 'round');
+    var line = d3.line().x(function (pt) { return f.x(pt.iso); }).y(function (pt) { return f.y(pt.v); });
+    svg.append('path').attr('d', line(series)).style('fill', 'none').style('stroke', '#10638F').style('stroke-width', 2.4);
     var step = isos.length > 1 ? f.x(isos[1]) - f.x(isos[0]) : 60;
     series.forEach(function (pt, i) {
       var cx = f.x(pt.iso), cy = f.y(pt.v);
@@ -1775,76 +1751,45 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     });
   }
 
-  var miniUid = 0;
-  // Small multiples: Total + top principals, each its own soft line/area with green/red dots
-  function drawDailyMini(el, lines, total) {
+  // Several principals: one daily line each (like the earlier trend design), up/down counts in the legend
+  function drawDailyMulti(el, lines, total) {
     if (!lines.length || !lines[0].series.length) { emptyNote(el, 'Tanggal invoice tidak tersedia'); return; }
-    var items = [{ name: 'Total principal dipilih', series: total, stats: dailyStats(total), color: '#0C4E72', total: true }].concat(lines);
-    var grid = document.createElement('div');
-    grid.className = 'mini-grid';
-    var cap = cell('div', 'Penjualan per hari kerja (bukan kumulatif). Titik hijau = naik, merah = turun dibanding hari kerja sebelumnya; ▲/▼ = jumlah hari naik/turun. Skala tiap kartu menyesuaikan principal-nya. Rincian % per tanggal ada di halaman 3.', 'daily-cap');
-    el.replaceChildren(grid, cap);
-    var tip = makeTip(el);
-    var gap = 10;
-    var cardW = Math.max(150, (el.clientWidth - gap * 2) / 3);
-    var cw = cardW - 22, ch = 72;
-    items.forEach(function (it) {
-      var series = it.series;
-      var card = document.createElement('div');
-      card.className = 'mini-card' + (it.total ? ' total' : '');
-      var head = document.createElement('div');
-      head.className = 'mini-head';
-      var dot = document.createElement('span');
-      dot.className = 'mini-dot';
-      dot.style.background = it.color;
-      var nm = cell('span', it.name, 'mini-name');
-      nm.title = it.name;
+    var legend = document.createElement('div');
+    legend.className = 'mline-legend';
+    lines.forEach(function (ln) {
+      var sp = document.createElement('span');
+      var i = document.createElement('i');
+      i.style.background = ln.color;
       var ud = document.createElement('span');
-      ud.className = 'mini-ud';
-      ud.append(cell('span', '▲' + it.stats.up, 'u'), cell('span', '▼' + it.stats.down, 'd'));
-      head.append(dot, nm, ud);
-      var last = series[series.length - 1];
-      var val = document.createElement('div');
-      val.className = 'mini-val';
-      val.append(cell('b', 'Rp ' + fJt(last.v) + ' jt'), cell('span', fHari(last.date), 'when'),
-        cell('span', changeShort(last), 'chg ' + (last.dir || 'flat')));
-      card.append(head, val);
-      var svg = d3.select(card).append('svg').attr('width', cw).attr('height', ch).attr('viewBox', '0 0 ' + cw + ' ' + ch)
-        .attr('role', 'img').attr('aria-label', it.name + ': ' + it.stats.up + ' hari naik, ' + it.stats.down + ' hari turun');
-      var isos = series.map(function (pt) { return pt.iso; });
-      var maxV = d3.max(series, function (pt) { return pt.v; }) || 1;
-      var minV = Math.min(0, d3.min(series, function (pt) { return pt.v; }) || 0);
-      var x = d3.scalePoint().domain(isos).range([5, cw - 5]);
-      var y = d3.scaleLinear().domain([minV, maxV * 1.12]).range([ch - 5, 7]);
-      var gid = 'mg' + (++miniUid);
-      var grad = svg.append('defs').append('linearGradient').attr('id', gid).attr('x1', 0).attr('x2', 0).attr('y1', 0).attr('y2', 1);
-      grad.append('stop').attr('offset', '0%').attr('stop-color', it.color).attr('stop-opacity', 0.32);
-      grad.append('stop').attr('offset', '100%').attr('stop-color', it.color).attr('stop-opacity', 0.02);
-      var area = d3.area().curve(d3.curveMonotoneX).x(function (pt) { return x(pt.iso); }).y0(y(Math.max(0, minV))).y1(function (pt) { return y(pt.v); });
-      var line = d3.line().curve(d3.curveMonotoneX).x(function (pt) { return x(pt.iso); }).y(function (pt) { return y(pt.v); });
-      svg.append('path').attr('d', area(series)).style('fill', 'url(#' + gid + ')');
-      if (minV < 0) svg.append('line').attr('x1', 0).attr('x2', cw).attr('y1', y(0)).attr('y2', y(0)).style('stroke', '#d6e1ea');
-      svg.append('path').attr('d', line(series)).style('fill', 'none').style('stroke', it.color).style('stroke-width', 2.2).style('stroke-linecap', 'round');
-      series.forEach(function (pt, i) {
-        var c = i === 0 ? it.color : (pt.dir === 'up' ? C_UP : pt.dir === 'down' ? C_DOWN : '#9aa7b4');
-        svg.append('circle').attr('cx', x(pt.iso)).attr('cy', y(pt.v)).attr('r', i === series.length - 1 ? 3.6 : 2.7)
-          .style('fill', c).style('stroke', '#fff').style('stroke-width', 1.2).style('pointer-events', 'none');
+      ud.className = 'ud';
+      ud.append(cell('span', '▲' + ln.stats.up, 'u'), cell('span', '▼' + ln.stats.down, 'd'));
+      sp.append(i, document.createTextNode(ln.name), ud);
+      legend.appendChild(sp);
+    });
+    var W = Math.max(300, el.clientWidth);
+    var H = 222;
+    var svg = d3.create('svg').attr('width', W).attr('height', H).attr('viewBox', '0 0 ' + W + ' ' + H)
+      .attr('role', 'img').attr('aria-label', 'Tren penjualan harian: ' + lines.map(function (ln) { return ln.name + ' ' + ln.stats.up + ' hari naik, ' + ln.stats.down + ' hari turun'; }).join('; '));
+    var ts = dailyStats(total);
+    var cap = cell('div', 'Penjualan per hari kerja (bukan kumulatif), 5 principal teratas. ▲/▼ = jumlah hari naik/turun dibanding hari kerja sebelumnya. Total principal dipilih: ▲ ' + ts.up + ' hari naik, ▼ ' + ts.down + ' hari turun. Rincian % per tanggal ada di halaman 3.', 'daily-cap');
+    el.replaceChildren(legend, svg.node(), cap);
+    var isos = lines[0].series.map(function (pt) { return pt.iso; });
+    var all = [];
+    lines.forEach(function (ln) { ln.series.forEach(function (pt) { all.push(pt.v); }); });
+    var f = lineFrame(svg, W, H, all, isos, { headroom: 1.06, top: 8 });
+    var line = d3.line().x(function (pt) { return f.x(pt.iso); }).y(function (pt) { return f.y(pt.v); });
+    lines.slice().reverse().forEach(function (ln) {
+      svg.append('path').attr('d', line(ln.series)).style('fill', 'none').style('stroke', ln.color).style('stroke-width', 2.2).style('stroke-linejoin', 'round');
+      ln.series.forEach(function (pt) {
+        svg.append('circle').attr('cx', f.x(pt.iso)).attr('cy', f.y(pt.v)).attr('r', 2.8).style('fill', ln.color).style('stroke', '#fff').style('stroke-width', 1).style('pointer-events', 'none');
       });
-      var xs = isos.map(function (iso) { return x(iso); });
-      var rule = svg.append('line').attr('y1', 2).attr('y2', ch - 2).style('stroke', '#9fb0c2').style('stroke-dasharray', '2 3').style('opacity', 0).style('pointer-events', 'none');
-      svg.append('rect').attr('width', cw).attr('height', ch).style('fill', 'transparent')
-        .on('pointermove', function (ev) {
-          var i = d3.bisectCenter(xs, d3.pointer(ev)[0]);
-          var pt = series[i];
-          rule.attr('x1', xs[i]).attr('x2', xs[i]).style('opacity', 1);
-          tip.show(ev, [it.name + ' · ' + fHariPanjang(pt.date), 'Penjualan Rp ' + fInt(pt.v), changeLine(pt)]);
-        })
-        .on('pointerleave', function () { rule.style('opacity', 0); tip.hide(); });
-      var axis = document.createElement('div');
-      axis.className = 'mini-axis';
-      axis.append(cell('span', dateTickLabel(series[0].date)), cell('span', 'maks Rp ' + fJt(maxV) + ' jt'), cell('span', dateTickLabel(last.date)));
-      card.appendChild(axis);
-      grid.appendChild(card);
+    });
+    hoverLayer(svg, el, f, isos, W, H, function (i) {
+      var d = lines[0].series[i].date;
+      return [fHariPanjang(d)].concat(lines.map(function (ln) {
+        var pt = ln.series[i];
+        return ln.name + ': Rp ' + fJt(pt.v) + ' jt (' + changeShort(pt) + ')';
+      }));
     });
   }
 
@@ -2010,7 +1955,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       drawDonut($('c-pdonut'), k.donut.map(function (r, i) {
         return { name: r.name, value: r.realisasi, share: r.kontribusi || 0, color: r.other ? OTHER_COLOR : (CAT[i] || colorAt(i)) };
       }), k.total);
-      drawDailyMini($('c-trend'), k.dailyLines, k.daily);
+      drawDailyMulti($('c-trend'), k.dailyLines, k.daily);
       drawDailyTable($('c-daily-table'), k);
       drawHeat($('c-heat'), k.heat);
     }
