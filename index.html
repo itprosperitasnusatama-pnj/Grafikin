@@ -155,6 +155,39 @@ button,input,select{font:inherit}
 .komp-legend .sw{width:16px;height:16px;border-radius:3px}
 .komp-legend b{font-weight:800}
 .trend{position:relative;min-height:270px}
+.daily-sum{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-bottom:6px;font-size:12px;color:#3c4d5e}
+.daily-sum .chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-weight:600;white-space:nowrap}
+.daily-sum .chip b{font-weight:800}
+.chip.up{background:#E4F3E9;color:#1d6640}
+.chip.down{background:#FCE8EB;color:#B42335}
+.chip.flat{background:#EEF2F6;color:#5d6d7e}
+.daily-sum .sum-note{color:#5d6d7e;white-space:nowrap}
+.daily-sum .sum-note b{color:var(--ink);font-weight:700}
+.mline-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;font-weight:600;color:#3c4d5e;margin-bottom:4px}
+.mline-legend i{display:inline-block;width:16px;height:3px;border-radius:2px;vertical-align:3px;margin-right:6px}
+.mline-legend .ud{font-weight:700;margin-left:6px}
+.mline-legend .ud .u{color:#1d6640}
+.mline-legend .ud .d{color:#B42335;margin-left:4px}
+.daily-cap{font-size:11px;color:var(--muted);margin-top:2px}
+.dtable{position:relative}
+.t-daily{width:100%;border-collapse:separate;border-spacing:2px;table-layout:fixed;font-variant-numeric:tabular-nums}
+.t-daily th{font-size:11.5px;font-weight:800;color:var(--navy);padding:3px 0;text-align:center;line-height:1.15;vertical-align:bottom}
+.t-daily th small{display:block;font-weight:600;color:#7d8b99;font-size:9.5px}
+.t-daily th.rl{text-align:left;width:170px;padding-left:4px}
+.t-daily th.c-cnt{width:40px}
+.t-daily th.c-max{width:100px}
+.t-daily td{font-size:10.5px;font-weight:700;text-align:center;padding:6px 0;border-radius:3px;white-space:nowrap;overflow:hidden}
+.t-daily td.rl{text-align:left;font-size:12px;font-weight:700;color:var(--ink);padding-left:4px;text-overflow:ellipsis;background:#F6F9FB}
+.t-daily tr.total td.rl{font-weight:800;color:var(--navy);background:#E6F1F7}
+.t-daily tr.total td{box-shadow:inset 0 -2px 0 rgba(12,78,114,.25)}
+.t-daily td.cnt{font-size:12.5px;font-weight:800;background:#F6F9FB}
+.t-daily td.cnt.up{color:#1d6640}
+.t-daily td.cnt.down{color:#B42335}
+.t-daily td.mx{font-size:10.5px;font-weight:600;background:#F6F9FB}
+.t-daily td.mx.up{color:#1d6640}
+.t-daily td.mx.down{color:#B42335}
+.daily-note{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.55}
+.daily-note b{color:var(--ink)}
 .trend-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;font-weight:600;color:#3c4d5e;margin-bottom:6px}
 .trend-legend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:3px;margin-right:6px}
 .heat{position:relative}
@@ -392,7 +425,7 @@ button,input,select{font:inherit}
             </section>
             <section class="pnj-row-b">
               <article class="panel">
-                <h2 class="panel-h"><span>Tren Realisasi Kumulatif (Rp juta)</span></h2>
+                <h2 class="panel-h"><span>Tren Penjualan Harian per Principal (Rp juta)</span></h2>
                 <div class="panel-b"><div class="trend" id="c-trend"></div></div>
               </article>
               <article class="panel">
@@ -444,6 +477,32 @@ button,input,select{font:inherit}
             </section>
           </div>
           <p class="pnj-foot" id="c-foot2"></p>
+        </div>
+        <div class="pnj sheet" id="sheet-c3">
+          <header class="pnj-head">
+            <div class="pnj-brand">
+              <div class="pnj-logo"><img src="data:image/png;base64,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" alt="Prosperitas Nusatama Jaya"></div>
+              <div>
+                <h1 class="pnj-title">Naik / Turun Harian per Principal</h1>
+                <div class="pnj-sub">PT Prosperitas Nusatama Jaya · prosperitasnusatama.com</div>
+              </div>
+            </div>
+            <div class="pnj-date">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+              <span data-f="tanggal">—</span>
+            </div>
+            <div class="pnj-principal">
+              <span class="pnj-principal-lbl">Periode</span>
+              <span class="pnj-principal-name sm" data-f="periode">—</span>
+            </div>
+          </header>
+          <div class="pnj-body">
+            <article class="panel">
+              <h2 class="panel-h"><span>Perubahan Penjualan Harian (%) vs Hari Kerja Sebelumnya</span><span class="legend"><span><i style="background:#2F8A57"></i>Naik</span><span><i style="background:#D1495B"></i>Turun</span></span></h2>
+              <div class="panel-b"><div class="dtable" id="c-daily-table"></div></div>
+            </article>
+          </div>
+          <p class="pnj-foot" id="c-foot3"></p>
         </div>
       </div>
 
@@ -531,6 +590,10 @@ button,input,select{font:inherit}
                 </div>
               </article>
             </section>
+            <article class="panel">
+              <h2 class="panel-h"><span>Tren Penjualan Harian (Rp juta)</span><span class="legend"><span><i style="background:#2F8A57;border-radius:50%"></i>Naik</span><span><i style="background:#D1495B;border-radius:50%"></i>Turun</span></span></h2>
+              <div class="panel-b"><div class="trend" id="d-daily"></div></div>
+            </article>
           </div>
           <p class="pnj-foot" id="d-foot"></p>
         </div>
@@ -997,6 +1060,9 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
   var fJt = function (v) { return L.format(',.1f')(v / 1e6); };
   var BULAN = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
   var BLN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+  var HARI = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+  var HARI_PANJANG = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+  var C_UP = '#2F8A57', C_DOWN = '#D1495B', C_FLAT = '#10638F';
   var PAL = ['#0C4E72', '#1A7DB3', '#6AAED6', '#B6D8EC', '#3F7FA5', '#9DC2D9'];
   var CAT = ['#0C4E72', '#1A7DB3', '#d4a72c', '#2f8a57', '#8e5bd0', '#d1495b', '#5bc0be'];
   var OTHER_COLOR = '#c3ccd6';
@@ -1216,11 +1282,59 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       return {
         fileName: fileName, sheetName: sheetName, periodeText: periodeText,
         start: (per && per.start) || minD, end: (per && per.end) || maxD,
-        lines: lines, suppliers: suppliers, skipped: skipped
+        lines: lines, suppliers: suppliers, skipped: skipped,
+        days: Array.from(new Set(lines.filter(function (l) { return l.date; }).map(function (l) { return isoDate(l.date); }))).sort()
       };
     }
     throw new Error('Format tidak dikenali: baris judul kolom "Tgl Invoice" dan "Nama Supplier" tidak ditemukan (sheet: ' + tried.join(', ') + '). Pastikan file adalah Laporan Penjualan per Barang (241).');
   }
+
+
+  // ---------- daily up/down ----------
+  function fSigned0(v) { return (v > 0 ? '+' : v < 0 ? '−' : '') + L.format(',.0f')(Math.abs(v)); }
+  function fSigned1(v) { return (v > 0 ? '+' : v < 0 ? '−' : '') + L.format(',.1f')(Math.abs(v)); }
+  function fPctS(v) { return Math.abs(v) < 1 ? fSigned1(v) : fSigned0(v); }
+  function fHari(d) { return HARI[d.getUTCDay()] + ' ' + d.getUTCDate() + ' ' + BLN[d.getUTCMonth()]; }
+  function fHariPanjang(d) { return HARI_PANJANG[d.getUTCDay()] + ', ' + fTglPendek(d); }
+  function dailySeries(dailyMap, days) {
+    var out = [];
+    days.forEach(function (iso, i) {
+      var v = dailyMap.get(iso) || 0;
+      var prev = i ? out[i - 1].v : null;
+      var pt = { iso: iso, date: fromIso(iso), v: v, prev: prev, diff: null, pct: null, dir: null, fromZero: false };
+      if (prev !== null) {
+        pt.diff = v - prev;
+        if (Math.abs(pt.diff) < 1) pt.dir = 'flat';
+        else pt.dir = pt.diff > 0 ? 'up' : 'down';
+        if (prev > 0) pt.pct = pt.diff / prev * 100;
+        else if (pt.dir === 'up') pt.fromZero = true;
+      }
+      out.push(pt);
+    });
+    return out;
+  }
+  function dailyStats(series) {
+    var st = { up: 0, down: 0, flat: 0, maxUp: null, maxDown: null, avg: 0, days: series.length };
+    series.forEach(function (pt) {
+      if (pt.dir === 'up') st.up++;
+      else if (pt.dir === 'down') st.down++;
+      else if (pt.dir === 'flat') st.flat++;
+      if (pt.pct !== null) {
+        if (pt.dir === 'up' && (!st.maxUp || pt.pct > st.maxUp.pct)) st.maxUp = pt;
+        if (pt.dir === 'down' && (!st.maxDown || pt.pct < st.maxDown.pct)) st.maxDown = pt;
+      }
+    });
+    st.avg = series.length ? sum(series, function (pt) { return pt.v; }) / series.length : 0;
+    return st;
+  }
+  function changeLine(pt) {
+    if (pt.prev === null) return 'Hari kerja pertama di periode ini';
+    var txt = (pt.diff >= 0 ? '+' : '−') + 'Rp ' + fInt(Math.abs(pt.diff));
+    if (pt.pct !== null) txt += ' (' + fSigned1(pt.pct) + '%)';
+    else if (pt.fromZero) txt += ' (sebelumnya Rp 0)';
+    return 'vs hari kerja sebelumnya: ' + txt;
+  }
+  function dirColor(pt) { return pt.dir === 'up' ? C_UP : pt.dir === 'down' ? C_DOWN : C_FLAT; }
 
   // ---------- grouping & compute ----------
   function buildGroups(report, s) {
@@ -1298,17 +1412,16 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       return out;
     }
 
-    // trend: cumulative daily of top 5
-    var start = report.start, end = reportDate(report, s) || report.end;
-    var days = [];
-    if (start && end && end >= start) {
-      for (var t = start.getTime(); t <= end.getTime(); t += 86400000) days.push(new Date(t));
-    }
-    var trendGroups = sel.filter(function (g) { return g.realisasi > 0; }).slice(0, 5);
-    var trend = trendGroups.map(function (g, i) {
-      var acc = 0;
-      return { name: g.name, color: CAT[i], values: days.map(function (d) { acc += g.daily.get(isoDate(d)) || 0; return { date: d, v: acc }; }) };
+    // daily: total of selected principals per working day, plus top principals
+    var days = report.days || [];
+    var totalDaily = new Map();
+    sel.forEach(function (g) { g.daily.forEach(function (v, d) { totalDaily.set(d, (totalDaily.get(d) || 0) + v); }); });
+    var daily = dailySeries(totalDaily, days);
+    var dailyRows = sel.filter(function (g) { return g.realisasi > 0; }).slice(0, 12).map(function (g) {
+      var sr = dailySeries(g.daily, days);
+      return { name: g.name, series: sr, stats: dailyStats(sr) };
     });
+    var dailyLines = dailyRows.slice(0, 5).map(function (r, i) { return { name: r.name, series: r.series, stats: r.stats, color: CAT[i] }; });
 
     // heatmap: top 8 principals x top 8 sales (+ lainnya)
     var salesRank = Array.from(perSales, function (e) { return { k: e[0], v: e[1] }; }).sort(function (a, b) { return b.v - a.v; });
@@ -1338,7 +1451,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       retur: sum(sel, function (g) { return g.retur; }),
       bars: withOther(10, 'Lainnya ({n} principal)'),
       donut: withOther(6, 'Lainnya ({n})'),
-      trend: trend,
+      daily: daily,
+      dailyStats: dailyStats(daily),
+      dailyRows: dailyRows,
+      dailyLines: dailyLines,
       heat: { cols: salesCols, rows: heatRows },
       table: withOther(20, 'Lainnya ({n} principal)'),
       products: products,
@@ -1535,62 +1651,217 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     });
   }
 
-  function drawTrend(el, series) {
-    if (!series.length || !series[0].values.length) { emptyNote(el, 'Tanggal invoice tidak tersedia'); return; }
-    var legend = document.createElement('div');
-    legend.className = 'trend-legend';
-    series.forEach(function (s) {
-      var sp = document.createElement('span');
-      var i = document.createElement('i');
-      i.style.background = s.color;
-      sp.append(i, document.createTextNode(s.name));
-      legend.appendChild(sp);
-    });
-    var W = Math.max(300, el.clientWidth);
-    var H = 238;
-    var svg = d3.create('svg').attr('width', W).attr('height', H).attr('viewBox', '0 0 ' + W + ' ' + H)
-      .attr('role', 'img').attr('aria-label', 'Tren realisasi kumulatif: ' + series.map(function (s) { return s.name + ' Rp ' + fJt(s.values[s.values.length - 1].v) + ' juta'; }).join(', '));
-    el.replaceChildren(legend, svg.node());
-    var tip = makeTip(el);
-    var dates = series[0].values.map(function (v) { return v.date; });
-    var maxV = d3.max(series, function (s) { return d3.max(s.values, function (v) { return v.v; }); }) || 1;
-    var minV = Math.min(0, d3.min(series, function (s) { return d3.min(s.values, function (v) { return v.v; }); }) || 0);
-    var y = d3.scaleLinear().domain([minV, maxV]).nice(5);
+  function dateTickLabel(d) { return d.getUTCDate() + ' ' + BLN[d.getUTCMonth()]; }
+  function lineFrame(svg, W, H, allValues, isos, opt) {
+    var maxV = d3.max(allValues) || 1;
+    var minV = Math.min(0, d3.min(allValues) || 0);
+    var y = d3.scaleLinear().domain([minV, maxV * (opt.headroom || 1.08)]).nice(5);
     var ticks = y.ticks(5);
     var probe = svg.append('text').style('font-size', '11px');
     var tickW = d3.max(ticks, function (t) { probe.text(fInt(t / 1e6)); return probe.node().getComputedTextLength(); }) || 30;
     probe.remove();
-    var m = { l: tickW + 10, r: 14, t: 8, b: 24 };
+    var m = { l: tickW + 10, r: 16, t: opt.top || 10, b: 24 };
     y.range([H - m.b, m.t]);
-    var x = d3.scaleUtc().domain([dates[0], dates[dates.length - 1]]).range([m.l, W - m.r]);
-    var grid = svg.append('g');
+    var x = d3.scalePoint().domain(isos).range([m.l + 6, W - m.r]).padding(0.15);
     ticks.forEach(function (t) {
-      grid.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(t)).attr('y2', y(t)).style('stroke', '#e3e9f0');
-      grid.append('text').attr('x', m.l - 6).attr('y', y(t)).attr('dy', '0.32em').attr('text-anchor', 'end').style('font-size', '11px').style('fill', '#5d6d7e').text(fInt(t / 1e6));
+      svg.append('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', y(t)).attr('y2', y(t)).style('stroke', t === 0 ? '#c9d6e1' : '#e8eef3');
+      svg.append('text').attr('x', m.l - 6).attr('y', y(t)).attr('dy', '0.32em').attr('text-anchor', 'end').style('font-size', '11px').style('fill', '#5d6d7e').text(fInt(t / 1e6));
     });
-    var step = Math.max(1, Math.ceil(dates.length / Math.max(2, Math.floor((W - m.l - m.r) / 52))));
-    dates.forEach(function (d, i) {
-      if (i % step !== 0 && i !== dates.length - 1) return;
-      if (i !== dates.length - 1 && dates.length - 1 - i < step) return;
-      svg.append('text').attr('x', x(d)).attr('y', H - 6).attr('text-anchor', 'middle').style('font-size', '11px').style('fill', '#5d6d7e')
-        .text(d.getUTCDate() + ' ' + BLN[d.getUTCMonth()]);
+    var stepPx = isos.length > 1 ? x(isos[1]) - x(isos[0]) : 60;
+    var every = Math.max(1, Math.ceil(46 / Math.max(1, stepPx)));
+    isos.forEach(function (iso, i) {
+      if (i % every !== 0 && i !== isos.length - 1) return;
+      if (i !== isos.length - 1 && isos.length - 1 - i < every) return;
+      var d = fromIso(iso);
+      svg.append('text').attr('x', x(iso)).attr('y', H - 6).attr('text-anchor', 'middle').style('font-size', '11px')
+        .style('fill', d.getUTCDay() === 1 ? '#0C4E72' : '#5d6d7e').style('font-weight', d.getUTCDay() === 1 ? 700 : 400).text(dateTickLabel(d));
     });
-    var line = d3.line().x(function (v) { return x(v.date); }).y(function (v) { return y(v.v); });
-    series.forEach(function (s) {
-      svg.append('path').attr('d', line(s.values)).style('fill', 'none').style('stroke', s.color).style('stroke-width', 2.4);
-      var last = s.values[s.values.length - 1];
-      svg.append('circle').attr('cx', x(last.date)).attr('cy', y(last.v)).attr('r', 3.5).style('fill', s.color);
-    });
-    var rule = svg.append('line').attr('y1', m.t).attr('y2', H - m.b).style('stroke', '#9fb0c2').style('stroke-dasharray', '3 3').style('opacity', 0);
-    svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).style('fill', 'transparent')
+    return { x: x, y: y, m: m };
+  }
+  function hoverLayer(svg, el, f, isos, W, H, linesFor) {
+    var tip = makeTip(el);
+    var rule = svg.append('line').attr('y1', f.m.t).attr('y2', H - f.m.b).style('stroke', '#9fb0c2').style('stroke-dasharray', '3 3').style('opacity', 0).style('pointer-events', 'none');
+    var xs = isos.map(function (iso) { return f.x(iso); });
+    svg.append('rect').attr('x', f.m.l).attr('y', f.m.t).attr('width', W - f.m.l - f.m.r).attr('height', H - f.m.t - f.m.b).style('fill', 'transparent')
       .on('pointermove', function (ev) {
-        var px = d3.pointer(ev)[0];
-        var i = d3.bisectCenter(dates.map(function (d) { return x(d); }), px);
-        var d = dates[i];
-        rule.attr('x1', x(d)).attr('x2', x(d)).style('opacity', 1);
-        tip.show(ev, ['s.d. ' + fTglPendek(d)].concat(series.map(function (s) { return s.name + ': Rp ' + fJt(s.values[i].v) + ' jt'; })));
+        var i = d3.bisectCenter(xs, d3.pointer(ev)[0]);
+        rule.attr('x1', xs[i]).attr('x2', xs[i]).style('opacity', 1);
+        tip.show(ev, linesFor(i));
       })
       .on('pointerleave', function () { rule.style('opacity', 0); tip.hide(); });
+  }
+  function changeShort(pt) {
+    if (pt.prev === null) return '–';
+    if (pt.pct !== null) return (pt.dir === 'up' ? '▲ ' : pt.dir === 'down' ? '▼ ' : '') + fPctS(pt.pct) + '%';
+    return pt.dir === 'up' ? '▲ dari Rp 0' : pt.dir === 'down' ? '▼' : '0%';
+  }
+
+  // Single principal: one line, dots green/red by direction, % above each dot
+  function drawDaily(el, series, opt) {
+    opt = opt || {};
+    if (!series.length) { emptyNote(el, 'Tanggal invoice tidak tersedia'); return; }
+    var st = dailyStats(series);
+    var sumBox = document.createElement('div');
+    sumBox.className = 'daily-sum';
+    function chip(cls, value, label) {
+      var sp = document.createElement('span');
+      sp.className = 'chip ' + cls;
+      sp.append(cell('b', value), document.createTextNode(' ' + label));
+      return sp;
+    }
+    function note(label, value) {
+      var sp = document.createElement('span');
+      sp.className = 'sum-note';
+      sp.append(document.createTextNode(label + ' '), cell('b', value));
+      return sp;
+    }
+    sumBox.append(chip('up', '▲ ' + st.up, 'hari naik'), chip('down', '▼ ' + st.down, 'hari turun'));
+    if (st.flat) sumBox.append(chip('flat', '■ ' + st.flat, 'hari tetap'));
+    if (st.maxUp) sumBox.append(note('Naik terbesar:', fHari(st.maxUp.date) + ' (' + fPctS(st.maxUp.pct) + '%)'));
+    if (st.maxDown) sumBox.append(note('Turun terbesar:', fHari(st.maxDown.date) + ' (' + fPctS(st.maxDown.pct) + '%)'));
+    sumBox.append(note('Rata-rata:', 'Rp ' + fJt(st.avg) + ' jt/hari'));
+    var W = Math.max(300, el.clientWidth);
+    var H = opt.height || 215;
+    var svg = d3.create('svg').attr('width', W).attr('height', H).attr('viewBox', '0 0 ' + W + ' ' + H)
+      .attr('role', 'img').attr('aria-label', 'Penjualan harian: ' + st.up + ' hari naik, ' + st.down + ' hari turun');
+    var cap = cell('div', 'Titik hijau = naik, merah = turun dibanding hari kerja sebelumnya; angka di atas titik = % perubahan. Hari tanpa transaksi (Minggu/libur) tidak dihitung.', 'daily-cap');
+    el.replaceChildren(sumBox, svg.node(), cap);
+    var isos = series.map(function (pt) { return pt.iso; });
+    var f = lineFrame(svg, W, H, series.map(function (pt) { return pt.v; }), isos, { headroom: 1.16, top: 16 });
+    svg.append('line').attr('x1', f.m.l).attr('x2', W - f.m.r).attr('y1', f.y(st.avg)).attr('y2', f.y(st.avg))
+      .style('stroke', '#d4a72c').style('stroke-width', 1.5).style('stroke-dasharray', '5 4');
+    svg.append('text').attr('x', W - f.m.r).attr('y', f.y(st.avg) - 4).attr('text-anchor', 'end').style('font-size', '10px').style('font-weight', 700).style('fill', '#9a7413').text('rata-rata');
+    var line = d3.line().x(function (pt) { return f.x(pt.iso); }).y(function (pt) { return f.y(pt.v); });
+    svg.append('path').attr('d', line(series)).style('fill', 'none').style('stroke', '#10638F').style('stroke-width', 2.4);
+    var step = isos.length > 1 ? f.x(isos[1]) - f.x(isos[0]) : 60;
+    series.forEach(function (pt, i) {
+      var cx = f.x(pt.iso), cy = f.y(pt.v);
+      var color = i === 0 ? C_FLAT : dirColor(pt);
+      svg.append('circle').attr('cx', cx).attr('cy', cy).attr('r', 4.2).style('fill', color).style('stroke', '#fff').style('stroke-width', 1.5).style('pointer-events', 'none');
+      if (i > 0 && (pt.dir === 'up' || pt.dir === 'down')) {
+        var lbl = pt.pct !== null ? fPctS(pt.pct) + (step >= 34 ? '%' : '') : (pt.dir === 'up' ? '▲' : '▼');
+        svg.append('text').attr('x', cx).attr('y', pt.dir === 'down' ? cy + 15 : cy - 8).attr('text-anchor', 'middle')
+          .style('font-size', (step >= 30 ? 10 : 8.5) + 'px').style('font-weight', 800).style('fill', pt.dir === 'up' ? '#1d6640' : '#B42335')
+          .style('pointer-events', 'none').text(lbl);
+      }
+    });
+    hoverLayer(svg, el, f, isos, W, H, function (i) {
+      var pt = series[i];
+      return [fHariPanjang(pt.date), 'Penjualan Rp ' + fInt(pt.v), changeLine(pt)];
+    });
+  }
+
+  // Several principals: one daily line each (like the earlier trend design), up/down counts in the legend
+  function drawDailyMulti(el, lines, total) {
+    if (!lines.length || !lines[0].series.length) { emptyNote(el, 'Tanggal invoice tidak tersedia'); return; }
+    var legend = document.createElement('div');
+    legend.className = 'mline-legend';
+    lines.forEach(function (ln) {
+      var sp = document.createElement('span');
+      var i = document.createElement('i');
+      i.style.background = ln.color;
+      var ud = document.createElement('span');
+      ud.className = 'ud';
+      ud.append(cell('span', '▲' + ln.stats.up, 'u'), cell('span', '▼' + ln.stats.down, 'd'));
+      sp.append(i, document.createTextNode(ln.name), ud);
+      legend.appendChild(sp);
+    });
+    var W = Math.max(300, el.clientWidth);
+    var H = 222;
+    var svg = d3.create('svg').attr('width', W).attr('height', H).attr('viewBox', '0 0 ' + W + ' ' + H)
+      .attr('role', 'img').attr('aria-label', 'Tren penjualan harian: ' + lines.map(function (ln) { return ln.name + ' ' + ln.stats.up + ' hari naik, ' + ln.stats.down + ' hari turun'; }).join('; '));
+    var ts = dailyStats(total);
+    var cap = cell('div', 'Penjualan per hari kerja (bukan kumulatif), 5 principal teratas. ▲/▼ = jumlah hari naik/turun dibanding hari kerja sebelumnya. Total principal dipilih: ▲ ' + ts.up + ' hari naik, ▼ ' + ts.down + ' hari turun. Rincian % per tanggal ada di halaman 3.', 'daily-cap');
+    el.replaceChildren(legend, svg.node(), cap);
+    var isos = lines[0].series.map(function (pt) { return pt.iso; });
+    var all = [];
+    lines.forEach(function (ln) { ln.series.forEach(function (pt) { all.push(pt.v); }); });
+    var f = lineFrame(svg, W, H, all, isos, { headroom: 1.06, top: 8 });
+    var line = d3.line().x(function (pt) { return f.x(pt.iso); }).y(function (pt) { return f.y(pt.v); });
+    lines.slice().reverse().forEach(function (ln) {
+      svg.append('path').attr('d', line(ln.series)).style('fill', 'none').style('stroke', ln.color).style('stroke-width', 2.2).style('stroke-linejoin', 'round');
+      ln.series.forEach(function (pt) {
+        svg.append('circle').attr('cx', f.x(pt.iso)).attr('cy', f.y(pt.v)).attr('r', 2.8).style('fill', ln.color).style('stroke', '#fff').style('stroke-width', 1).style('pointer-events', 'none');
+      });
+    });
+    hoverLayer(svg, el, f, isos, W, H, function (i) {
+      var d = lines[0].series[i].date;
+      return [fHariPanjang(d)].concat(lines.map(function (ln) {
+        var pt = ln.series[i];
+        return ln.name + ': Rp ' + fJt(pt.v) + ' jt (' + changeShort(pt) + ')';
+      }));
+    });
+  }
+
+  function drawDailyTable(el, k) {
+    var series = k.daily;
+    if (!series.length || !k.dailyRows.length) { emptyNote(el, 'Tidak ada data harian'); return; }
+    var green = d3.interpolateRgb('#E6F4EA', '#2F8A57');
+    var red = d3.interpolateRgb('#FCE9EC', '#D1495B');
+    var rows = [{ name: 'Total principal dipilih', series: series, stats: k.dailyStats, total: true }].concat(k.dailyRows);
+    var table = document.createElement('table');
+    table.className = 't-daily';
+    var thead = document.createElement('thead');
+    var hr = document.createElement('tr');
+    hr.appendChild(cell('th', 'Principal', 'rl'));
+    series.forEach(function (pt) {
+      var th = document.createElement('th');
+      th.append(document.createTextNode(String(pt.date.getUTCDate())), cell('small', HARI[pt.date.getUTCDay()]));
+      hr.appendChild(th);
+    });
+    hr.append(cell('th', '▲ Naik', 'c-cnt'), cell('th', '▼ Turun', 'c-cnt'), cell('th', 'Naik terbesar', 'c-max'), cell('th', 'Turun terbesar', 'c-max'));
+    thead.appendChild(hr);
+    var tbody = document.createElement('tbody');
+    var tip = null;
+    var tendUp = 0, tendDown = 0, tendEq = 0;
+    rows.forEach(function (r) {
+      var tr = document.createElement('tr');
+      if (r.total) tr.className = 'total';
+      var nm = cell('td', r.name, 'rl');
+      nm.title = r.name;
+      tr.appendChild(nm);
+      r.series.forEach(function (pt, i) {
+        var td = document.createElement('td');
+        var txt = '', bg = '#F6F9FB', fg = '#9aa7b4';
+        if (i === 0) { txt = '–'; }
+        else if (pt.dir === 'flat') { txt = pt.v === 0 ? '' : '0'; }
+        else {
+          var t = pt.pct === null ? 0.55 : Math.min(1, Math.abs(pt.pct) / 100);
+          t = 0.18 + t * 0.82;
+          if (pt.dir === 'up') { bg = green(t); txt = pt.pct === null ? '▲' : fPctS(pt.pct); }
+          else { bg = red(t); txt = pt.pct === null ? '▼' : fPctS(pt.pct); }
+          fg = t > 0.55 ? '#ffffff' : (pt.dir === 'up' ? '#1d6640' : '#B42335');
+          if (Math.abs(pt.pct || 0) >= 1000) txt = (pt.dir === 'up' ? '▲' : '▼') + '999+';
+        }
+        td.textContent = txt;
+        td.style.background = bg;
+        td.style.color = fg;
+        td.addEventListener('pointermove', function (ev) { tip.show(ev, [r.name + ' · ' + fHariPanjang(pt.date), 'Penjualan Rp ' + fInt(pt.v), changeLine(pt)]); });
+        td.addEventListener('pointerleave', function () { tip.hide(); });
+        tr.appendChild(td);
+      });
+      var st = r.stats;
+      if (!r.total) { if (st.up > st.down) tendUp++; else if (st.down > st.up) tendDown++; else tendEq++; }
+      tr.append(
+        cell('td', String(st.up), 'cnt up'),
+        cell('td', String(st.down), 'cnt down'),
+        cell('td', st.maxUp ? st.maxUp.date.getUTCDate() + ' ' + BLN[st.maxUp.date.getUTCMonth()] + ' ' + fPctS(st.maxUp.pct) + '%' : '—', 'mx up'),
+        cell('td', st.maxDown ? st.maxDown.date.getUTCDate() + ' ' + BLN[st.maxDown.date.getUTCMonth()] + ' ' + fPctS(st.maxDown.pct) + '%' : '—', 'mx down')
+      );
+      tbody.appendChild(tr);
+    });
+    table.append(thead, tbody);
+    var nt = document.createElement('div');
+    nt.className = 'daily-note';
+    nt.append(
+      document.createTextNode('Dari ' + k.dailyRows.length + ' principal teratas: '),
+      cell('b', tendUp + ' lebih sering naik'), document.createTextNode(', '),
+      cell('b', tendDown + ' lebih sering turun'), document.createTextNode(', '),
+      cell('b', tendEq + ' seimbang'),
+      document.createTextNode('. Angka = % perubahan penjualan dibanding hari kerja sebelumnya. ▲/▼ = hari sebelumnya Rp 0 atau minus. Kosong = tidak ada penjualan di kedua hari. Hari tanpa transaksi sama sekali (Minggu/libur) tidak dihitung.')
+    );
+    el.replaceChildren(table, nt);
+    tip = makeTip(el);
   }
 
   function drawHeat(el, heat) {
@@ -1666,7 +1937,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
     var k = computeCompare(report, groups, s);
     var periode = fPeriode(report.start, reportDate(report, s));
     if (!k.sel.length) {
-      ['c-pbar', 'c-pdonut', 'c-trend', 'c-heat'].forEach(function (id) { emptyNote($(id), 'Belum ada principal yang dicentang'); });
+      ['c-pbar', 'c-pdonut', 'c-trend', 'c-heat', 'c-daily-table'].forEach(function (id) { emptyNote($(id), 'Belum ada principal yang dicentang'); });
     }
     setText('kc-real', 'Rp ' + fInt(k.total));
     setText('kc-real-note', fInt(k.lineCount) + ' baris dari ' + fInt(k.supplierCount) + ' supplier');
@@ -1684,7 +1955,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       drawDonut($('c-pdonut'), k.donut.map(function (r, i) {
         return { name: r.name, value: r.realisasi, share: r.kontribusi || 0, color: r.other ? OTHER_COLOR : (CAT[i] || colorAt(i)) };
       }), k.total);
-      drawTrend($('c-trend'), k.trend);
+      drawDailyMulti($('c-trend'), k.dailyLines, k.daily);
+      drawDailyTable($('c-daily-table'), k);
       drawHeat($('c-heat'), k.heat);
     }
 
@@ -1758,6 +2030,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       (k.targetCount ? 'Achievement total dihitung dari ' + k.targetCount + ' principal yang punya target.' : 'Target belum diisi.');
     setText('c-foot1', note);
     setText('c-foot2', note);
+    setText('c-foot3', note);
     return k;
   }
 
@@ -1797,6 +2070,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var r,n,i,a,
       donutItems.push({ name: 'Lainnya (' + rest2.length + ')', value: rv2, share: k.realisasi ? rv2 / k.realisasi * 100 : 0, color: OTHER_COLOR });
     }
     drawDonut($('d-komp'), donutItems, k.realisasi);
+    drawDaily($('d-daily'), dailySeries(g.daily, report.days || []), { height: 200 });
 
     var body = $('t-sales-body');
     body.replaceChildren.apply(body, k.sales.map(function (r) {
